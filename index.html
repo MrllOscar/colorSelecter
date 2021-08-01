@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>顏色選擇器</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Indie+Flower&family=MonteCarlo&display=swap');
+    .colorbox {
+      width: 400px;
+      height: 300px;
+      margin: 1rem auto;
+      border-radius: 3%;
+      /* background-color: #aaaaaa; */
+    }
+
+    .w-100 {
+      width: 100%;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .w-100>button {
+      width: 27px;
+      height: 20px;
+      margin: 5px;
+      font-weight: bolder;
+    }
+    p{
+      text-align: center;
+      line-height: 300px;
+      font-size: 3rem;
+      font-family: 'Dancing Script', 'Indie Flower' , 'MonteCarlo' , cursive;
+    }
+    #rangeR{
+      background: #F00;
+    }
+    #btnR , #btnG ,#btnB{
+      border-radius: 10%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="colorbox"></div>
+  <div class="w-100">
+    <button id="btnR" onclick="btnchange('R')">R</button>
+    <input type="range" min="0" max="255" id="rangeR" onmousemove="rangeColor(this)">
+  </div>
+  <div class="w-100">
+    <button id="btnG" onclick="btnchange('G')">G</button>
+    <input type="range" min="0" max="255" id="rangeG" onmousemove="rangeColor(this)">
+  </div>
+  <div class="w-100">
+    <button id="btnB" onclick="btnchange('B')">B</button>
+    <input type="range" min="0" max="255" id="rangeB" onmousemove="rangeColor(this)">
+  </div>
+  <div class="w-100">
+    <button id="what" onclick="btnchange()">?</button>
+  </div>
+  <script>
+    let R , G , B ;
+    let box = document.querySelector(".colorbox"),
+      btnR = document.querySelector("#btnR"),
+      btnG = document.querySelector("#btnG"),
+      btnB = document.querySelector("#btnB"),
+      what = document.querySelector("#what"),
+      rangeR = document.querySelector("#rangeR"),
+      rangeG = document.querySelector("#rangeG"),
+      rangeB = document.querySelector("#rangeB");
+
+    btnchange();
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+      //範圍=大-小+1  基礎=小
+    }
+    function btnchange(btn) {
+      let number = -1;
+      let color;
+      switch (btn) {
+        case 'R':
+          if (number < 0 || number > 255) {
+            number = prompt("請輸入範圍0~255");
+            if (!number) {
+              number = R;
+            }
+          }
+          R = number;
+          break;
+        case 'G':
+          if (number < 0 || number > 255) {
+            number = prompt("請輸入範圍0~255");
+            if (!number) {
+              number = G;
+            }
+          }
+          G = number;
+          break;
+        case 'B':
+          if (number < 0 || number > 255) {
+            number = prompt("請輸入範圍0~255");
+            if (!number) {
+              number = B;
+            }
+          }
+          B = number;
+          break;
+        default:
+          R = random(0, 255);
+          G = random(0, 255);
+          B = random(0, 255);
+          break;
+      }
+      change(R, G, B);
+
+      rangeR.value = R;
+      rangeG.value = G;
+      rangeB.value = B;
+    }
+
+    function rangeColor(RGB) {
+      switch (RGB.id) {
+        case 'rangeR':
+          R = RGB.value;
+          break;
+        case 'rangeG':
+          G = RGB.value;
+          break;
+        case 'rangeB':
+          B = RGB.value;
+          break;
+      }
+      change(R, G, B);
+    }
+
+    function change(R, G, B) {
+      color = `rgb(${R},${G},${B})`;
+      box.style.backgroundColor = color;
+      what.style.color = color;
+      btnR.style.color=`rgb(${R},0,0)`;
+      btnG.style.color=`rgb(0,${G},0)`;
+      btnB.style.color=`rgb(0,0,${B})`;
+
+      let Red = Number(R).toString(16).padStart(2, '0'),
+        Green = Number(G).toString(16).padStart(2, '0'),
+        Blue = Number(B).toString(16).padStart(2, '0');
+
+      let code = "#" + Red + Green + Blue;
+      if(R > 128 || G > 128 || B>128){
+      box.innerHTML = `<p style="color:#000">${code}</p>`;
+    }else{
+      box.innerHTML = `<p style="color:#FFF">${code}</p>`;
+    }
+    if(R>128){
+      btnR.style.backgroundColor = `#444`;
+    }else{
+      btnR.style.backgroundColor = `#eee`;
+    }
+    if(G>128){
+      btnG.style.backgroundColor = `#444`;
+    }else{
+      btnG.style.backgroundColor = `#eee`;
+    }
+    if(B>128){
+      btnB.style.backgroundColor = `#444`;
+    }else{
+      btnB.style.backgroundColor = `#eee`;
+    }
+    }
+
+  </script>
+</body>
+
+</html>

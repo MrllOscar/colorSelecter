@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>顏色選擇器</title>
+  <style>
+    #box{
+      display: flex;
+      justify-content:center;
+      align-items: center;
+      width: 500px;
+      height: 300px;
+      margin: 20px auto;
+      border-radius: 20px;
+      box-shadow: 0 0 5px #ddd;
+    }
+    #colorCode{
+      color: #fff;
+      font-size: 5rem;
+      text-shadow: 0 0 5px #ddd;
+    }
+    .control{
+      text-align: center;
+    }
+    .control table{
+      margin: 0 auto;
+    }
+    .control table tr td{
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <p id="colorCode">#FFFFFF</p>
+  </div>
+
+  <div class="control">
+    <table>
+      <tr>
+        <td><button onclick="btnColor('R')">R</button></td>
+        <td><input type="range" id="inputR" min="0" max="255" onmousemove="rangeColor(this)"></td>
+      </tr>
+      <tr>
+        <td><button onclick="btnColor('G')">G</button></td>
+        <td><input type="range" id="inputG" min="0" max="255" onmousemove="rangeColor(this)"></td>
+      </tr>
+      <tr>
+        <td><button onclick="btnColor('B')">B</button></td>
+        <td><input type="range" id="inputB" min="0" max="255" onmousemove="rangeColor(this)"></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button id="btnAdd">+</button>
+          <button id="btnMinus">-</button>
+          <button id="btnRand">?</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+  <script>
+    let Red="";
+    let Green="";
+    let Blue="";
+    let box=document.getElementById("box");
+    let colorCode=document.getElementById("colorCode");
+    let inputR=document.getElementById("inputR");
+    let inputG=document.getElementById("inputG");
+    let inputB=document.getElementById("inputB");
+    let btnAdd=document.getElementById("btnAdd");
+    let btnMinus=document.getElementById("btnMinus");
+    let btnRand=document.getElementById("btnRand");
+
+    btnAdd.addEventListener("mousedown",setAdd);
+    btnAdd.addEventListener("mouseup",clearFunc);
+    btnMinus.addEventListener("mousedown",setMinus);
+    btnMinus.addEventListener("mouseup",clearFunc);
+    btnRand.addEventListener("mousedown",setRand);
+    btnRand.addEventListener("mouseup",clearFunc);
+
+
+    btnColor();
+
+  
+    function func_rand(min,max){
+      return Math.floor(Math.random()*(max-min+1)+min); 
+    }
+
+    function btnColor(btn='no'){
+      let ans=-1;
+      let color;
+      
+      switch(btn){
+        case 'no':
+          Red=func_rand(0,255);
+          Green=func_rand(0,255);
+          Blue=func_rand(0,255);
+          break;
+        case 'R':
+          while(ans<0 || ans>255){
+            ans=prompt("輸入0~255");
+            if(!ans){
+              ans=Red;
+            }
+          }
+          Red=ans;
+          break;
+        case 'G':
+          while(ans<0 || ans>255){
+              ans=prompt("輸入0~255");
+              if(!ans){
+                ans=Green;
+              }
+            }
+            Green=ans;
+          break;
+        case 'B':
+          while(ans<0 || ans>255){
+            ans=prompt("輸入0~255");
+            if(!ans){
+              ans=Blue;
+            }
+          }
+          Blue=ans;
+          break;
+      }
+      change(Red,Green,Blue);
+
+      inputR.value=Red;
+      inputG.value=Green;
+      inputB.value=Blue;
+    }
+
+    function rangeColor(RGB){
+      console.log(RGB.id);
+      switch(RGB.id){
+        case 'inputR':
+          Red=RGB.value;
+          break;
+        case 'inputG':
+          Green=RGB.value;
+          break;
+        case 'inputB':
+          Blue=RGB.value;
+          break;
+      }
+
+      change(Red,Green,Blue);
+    }
+
+
+    let colorNum;
+    function setAdd(){
+      colorNum=setInterval(()=>{
+        if(inputR.value<=255)
+          inputR.value++;
+        if(inputG.value<=255)  
+          inputG.value++;
+        if(inputB.value<=255)
+          inputB.value++;
+
+         change(inputR.value,inputG.value,inputB.value);
+      },50);
+    }
+    function setMinus(){
+      colorNum=setInterval(()=>{
+        if(inputR.value>=0)
+          inputR.value--;
+        if(inputG.value>=0)  
+          inputG.value--;
+        if(inputB.value>=0)
+          inputB.value--;
+
+        change(inputR.value,inputG.value,inputB.value);  
+      },50);
+    }
+    function setRand(){
+      colorNum=setInterval(()=>{
+        inputR.value=func_rand(0,255);
+        inputG.value=func_rand(0,255);
+        inputB.value=func_rand(0,255);
+
+        change(inputR.value,inputG.value,inputB.value);  
+      },50);
+    }
+
+    function clearFunc(){
+      clearInterval(colorNum);
+    }
+
+
+    function change(Red,Green,Blue){
+      color="rgb("+Red+", "+Green+", "+Blue+")";
+      box.style="background-color:"+ color +";";
+
+      let r=Number(Red).toString(16).toUpperCase();
+      let g=Number(Green).toString(16).toUpperCase();
+      let b=Number(Blue).toString(16).toUpperCase();
+
+      if(r.length<2)
+        r="0"+r;
+      if(g.length<2)
+        g="0"+g;
+      if(b.length<2)
+        b="0"+b;
+
+      let code="#"+r+g+b;
+      console.log(code);
+      colorCode.textContent=code;
+    }
+  </script>
+</body>
+</html>
